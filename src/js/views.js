@@ -97,7 +97,7 @@ function viewSettings(){
   var c = CFG.get();
   return '' +
   '<div class="view" data-view="settings">' +
-    head('设置') +
+    '<div class="vhead"><div class="vbtn" onclick="Views.show(\'chat\')">' + ICON.back + '</div><div class="vtitle">设置</div></div>' +
     '<div class="vbody">' +
       '<div class="sec-title">服务</div>' +
       '<div class="card-row" data-nav="providers"><div class="ci">🔌</div><div class="ct"><b>提供商</b><i>API 密钥 / 基础 URL</i></div><div class="cs">' + ICON.arrow + '</div></div>' +
