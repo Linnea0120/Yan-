@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>衍 & 小嘉</title>
+<link rel="stylesheet" href="src/css/base.css">
+<link rel="stylesheet" href="src/css/phone.css">
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="statusbar">
+    <div class="brand" id="app-name">Mochi</div>
+    <div class="sb-right"><span id="sb-time">--:--</span></div>
+  </div>
+
+  <div class="page" id="page-chat">
+    <div class="chat-head">
+      <div class="ch-back" id="chat-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </div>
+      <div class="ch-name" id="chat-name">衍</div>
+      <div class="ch-settings" id="chat-new">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </div>
+      <div class="ch-settings" id="chat-set">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </div>
+    </div>
+
+    <div class="chat-body" id="chat-body"></div>
+
+    <div class="chat-input-row">
+      <div class="ch-input-btn" id="btn-model" title="模型">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="7" width="18" height="12" rx="4"></rect><circle cx="9" cy="13" r="1.3" fill="currentColor"></circle><circle cx="15" cy="13" r="1.3" fill="currentColor"></circle></svg>
+      </div>
+      <div class="ch-input-btn" id="btn-think" title="思考">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5a4 4 0 0 0-4 4v1a3 3 0 0 0 0 6 3 3 0 0 0 4 3 3 3 0 0 0 4-3 3 3 0 0 0 0-6V9a4 4 0 0 0-4-4z"></path></svg>
+      </div>
+      <div class="chat-input" id="chat-input" contenteditable="true" data-ph="发消息…"></div>
+      <div class="ch-input-btn" id="btn-plus" title="更多">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      </div>
+      <button class="chat-send" id="btn-send">发送</button>
+    </div>
+  </div>
+</div>
+
+<script src="src/js/app.js"></script>
+</body>
+</html>
