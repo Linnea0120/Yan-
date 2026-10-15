@@ -81,8 +81,8 @@ function viewMe(){
         '</div>' +
         '<div class="couple-hr"></div>' +
         '<div class="couple-stats">' +
-          '<div class="couple-stat"><span>今日情话</span><b id="today-word">你不用一个人撑着</b></div>' +
-          '<div class="couple-stat"><span>已记账</span><b>' + days + ' 天</b></div>' +
+          '<div class="couple-stat"><span>聊天记录</span><b>' + MSG.all().length + ' 条</b></div>' +
+          '<div class="couple-stat"><span>认识</span><b>' + days + ' 天</b></div>' +
         '</div>' +
       '</div>' +
       '<div class="card-row" data-nav="edit-ai"><div class="ci">✨</div><div class="ct"><b>衍的资料</b><i>头像 / 名字 / 设定</i></div><div class="cs">' + ICON.arrow + '</div></div>' +
