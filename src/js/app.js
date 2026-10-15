@@ -34,7 +34,6 @@ function pushMsg(role, content){
   var list = msgs();
   list.push({ role: role, content: content, ts: Date.now() });
   saveMsgs(list);
-  return list;
 }
 
 /* ---------- 工具 ---------- */
@@ -46,7 +45,6 @@ function hhmm(ts){
   var h = d.getHours(), m = d.getMinutes();
   return (h<10?'0':'')+h+':'+(m<10?'0':'')+m;
 }
-/* 按换行拆成多个气泡 */
 function splitLines(text){
   return String(text).split('\n').filter(function(l){ return l.trim() !== ''; });
 }
@@ -55,42 +53,51 @@ function splitLines(text){
 function avHtml(role){
   var c = cfg();
   var src = role === 'user' ? c.userAvatar : c.aiAvatar;
-  if(src){ return '<img src="'+src+'" alt="">'; }
+  if(src){ return '<img src="' + src + '" alt="">'; }
   return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"></path></svg>';
 }
 
-/* ---------- 渲染 ---------- */
+/* ---------- 头像列 ---------- */
+function sideHtml(role, ts){
+  return '<div class="msg-av">' + avHtml(role) + '</div><div class="msg-time">' + hhmm(ts) + '</div>';
+}
+
+/* ---------- 气泡列 ---------- */
+function colOf(content){
+  var box = document.createElement('div');
+  box.className = 'msg-col';
+  var lines = splitLines(content);
+  if(!lines.length) lines = [''];
+  lines.forEach(function(line){
+    var b = document.createElement('div');
+    b.className = 'msg-bubble';
+    b.innerHTML = esc(line);
+    box.appendChild(b);
+  });
+  return box;
+}
+
+var ACTS_HTML =
+  '<div class="msg-act" data-act="copy" title="复制"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg></div>' +
+  '<div class="msg-act" data-act="regen" title="重新生成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg></div>' +
+  '<div class="msg-act" data-act="edit" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></div>' +
+  '<div class="msg-act" data-act="more" title="更多"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg></div>';
+
+/* ---------- 渲染单条 ---------- */
 function renderMsg(m, isNew){
   var isUser = m.role === 'user';
   var wrap = document.createElement('div');
   wrap.className = 'msg ' + (isUser ? 'msg-out' : 'msg-in') + (isNew ? ' msg-enter' : '');
 
   var side = document.createElement('div');
-  side.className =sg-av">'+avHtml(m.role)+'</div><div class="msg-time">'+hhmm(m.ts)+'</div>';
+  side.className = 'msg-side';
+  side.innerHTML = sideHtml(m.role, m.ts);
 
-  var box = document.createElement('div');
-  box.className = 'msg-col';
-  box.style.display = 'flex';
-  box.style.flexDirection = 'column';
-  box.style.gap = '6px';
-  box.style.minWidth = '0';
-
-  splitLines(m.content).forEach(function(line){
-    var b = document.createElement('div');
-    b.className = 'msg-bubble';
-    b.innerHTML = esc(line).replace(/\n/g,'<br>');
-    box.appendChild(b);
-  });
-
-  /* AI 消息的操作按钮 */
+  var box = colOf(m.content);
   if(!isUser){
     var acts = document.createElement('div');
     acts.className = 'msg-acts show';
-    acts.innerHTML =
-      '<div class="msg-act" data-act="copy" title="复制"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg></div>'+
-      '<div class="msg-act" data-act="regen" title="重新生成"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7"></path><polyline points="21 3 21 9 15 9"></polyline></svg></div>'+
-      '<div class="msg-act" data-act="edit" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></div>'+
-      '<div class="msg-act" data-act="more" title="更多"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle></svg></div>';
+    acts.innerHTML = ACTS_HTML;
     box.appendChild(acts);
   }
 
@@ -104,70 +111,69 @@ function renderMsg(m, isNew){
   el.body.appendChild(wrap);
 }
 
-function renderAll(){
-  el.body.innerHTML = '';
-  var list = msgs();
-  if(!list.length){
-    renderWelcome();
-  }else{
-    list.forEach(function(m){ renderMsg(m, false); });
-  }
-  scrollBottom();
-}
-
+/* ---------- 欢迎语 ---------- */
 function renderWelcome(){
   var wrap = document.createElement('div');
   wrap.className = 'msg msg-in msg-enter';
+  wrap.dataset.welcome = '1';
   var side = document.createElement('div');
   side.className = 'msg-side';
-  side.innerHTML = '<div class="msg-av">'+avHtml('assistant')+'</div><div class="msg-time">'+hhmm(Date.now())+'</div>';
-  var box = document.createElement('div');
-  box.className = 'msg-col';
-  box.style.display = 'flex';
-  box.style.flexDirection = 'column';
-  box.style.gap = '6px';
-  var b = document.createElement('div');
-  b.className = 'msg-bubble';
-  b.textContent = '宝宝，我在这里。';
-  box.appendChild(b);
+  side.innerHTML = sideHtml('assistant', Date.now());
+  var box = colOf('宝宝，我在这里。');
   wrap.appendChild(side);
   wrap.appendChild(box);
   el.body.appendChild(wrap);
+}
+
+/* ---------- 全部重绘 ---------- */
+function renderAll(){
+  el.body.innerHTML = '';
+  var list = msgs();
+  if(!list.length) renderWelcome();
+  else list.forEach(function(m){ renderMsg(m, false); });
+  scrollBottom();
 }
 
 function scrollBottom(){
   requestAnimationFrame(function(){ el.body.scrollTop = el.body.scrollHeight; });
 }
 
+/* ---------- 新增一条 ---------- */
 function addMsg(role, content, isNew){
-  var m = { role: role, content: content, ts: Date.now() };
+  var w = el.body.querySelector('[data-welcome]');
+  if(w && msgs().length === 0) el.body.removeChild(w);
   pushMsg(role, content);
-  if(el.body.querySelector('.msg') && el.body.children.length === 1){
-    var first = el.body.firstChild;
-    if(first && first.dataset && first.dataset.welcome) el.body.removeChild(first);
-  }
-  renderMsg(m, isNew !== false);
+  renderMsg({ role: role, content: content, ts: Date.now() }, isNew !== false);
   scrollBottom();
 }
 
 /* ---------- 发送 ---------- */
 function doSend(){
-  var t = el.input.innerText.replace(/\u00a0/g,' ').trim();
+  var t = el.input.innerText.replace(/\u00a0/g, ' ').trim();
   if(!t) return;
   el.input.innerHTML = '';
   addMsg('user', t, true);
-  fakeReply(t);
+  pendingReply();
 }
 
-/* 占位回复（还未接 API） */
-function fakeReply(text){
+/* 占位思考中（还没接 API） */
+function pendingReply(){
   var dots = document.createElement('div');
   dots.className = 'msg msg-in';
-  dots.innerHTML = '<div class="msg-side"><div class="msg-av">'+avHtml('assistant')+'</div><div class="msg-time">'+hhmm(Date.now())+'</div></div><div class="msg-col"><div class="msg-bubble" style="opacity:.6">正在思考…</div></div>';
+  dots.dataset.pending = '1';
+  var side = document.createElement('div');
+  side.className = 'msg-side';
+  side.innerHTML = sideHtml('assistant', Date.now());
+  var box = document.createElement('div');
+  box.className = 'msg-col';
+  box.innerHTML = '<div class="msg-bubble" style="opacity:.55">正在思考…</div>';
+  dots.appendChild(side);
+  dots.appendChild(box);
   el.body.appendChild(dots);
   scrollBottom();
+
   setTimeout(function(){
-    el.body.removeChild(dots);
+    if(el.body.contains(dots)) el.body.removeChild(dots);
     addMsg('assistant', '收到。\n（后端还没接上，先把界面跑起来）', true);
   }, 700);
 }
@@ -181,23 +187,22 @@ if(el.input){
 }
 
 el.body.addEventListener('click', function(e){
-  var a = e.target.closest && e.target.closest('.msg-act');
+  var t = e.target;
+  var a = t.closest ? t.closest('.msg-act') : null;
   if(!a) return;
-  var act = a.dataset.act;
   var msgEl = a.closest('.msg');
   var text = '';
   msgEl.querySelectorAll('.msg-bubble').forEach(function(b){ text += b.innerText + '\n'; });
   text = text.trim();
-  if(act === 'copy'){
-    if(navigator.clipboard) navigator.clipboard.writeText(text);
+  if(a.dataset.act === 'copy' && navigator.clipboard){
+    navigator.clipboard.writeText(text);
   }
 });
 
-/* 状态栏时间 */
+/* ---------- 状态栏时间 ---------- */
 function tick(){
   if(el.sbTime) el.sbTime.textContent = hhmm(Date.now());
 }
-setInterval(tick, 10000);
 
 /* ---------- 初始化 ---------- */
 function init(){
@@ -205,10 +210,11 @@ function init(){
   if(c.aiName && el.name) el.name.textContent = c.aiName;
   if(c.appName && el.appName) el.appName.textContent = c.appName;
   tick();
+  setInterval(tick, 10000);
   renderAll();
 }
 init();
 
-window.YanApp = { cfg: cfg, cfgSet: cfgSet, addMsg: addMsg, renderAll: renderAll };
+window.YanApp = { cfg: cfg, cfgSet: cfgSet, addMsg: addMsg, renderAll: renderAll, splitLines: splitLines };
 
 })();
