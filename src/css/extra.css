@@ -1,0 +1,31 @@
+/* ===== 补充样式 ===== */
+
+/* 分组标题（views.js 里用 .sec-title） */
+.sec-title{
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  padding:8px 4px 2px;
+  letter-spacing:.5px;
+}
+
+/* 我的一句话 */
+.word-line{
+  font-size:13px;
+  line-height:1.7;
+  color:var(--ink);
+}
+
+/* 空状态 */
+.empty{
+  text-align:center;
+  color:var(--muted);
+  font-size:12.5px;
+  line-height:1.8;
+  padding:28px 12px;
+}
+
+/* 深色下的浅色占位块 */
+[data-theme="dark"] .card-row .ci{background:rgba(255,255,255,.07)}
+
+* /placeholder end
