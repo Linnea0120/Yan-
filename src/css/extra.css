@@ -9,13 +9,6 @@
   letter-spacing:.5px;
 }
 
-/* 我的一句话 */
-.word-line{
-  font-size:13px;
-  line-height:1.7;
-  color:var(--ink);
-}
-
 /* 空状态 */
 .empty{
   text-align:center;
@@ -25,7 +18,9 @@
   padding:28px 12px;
 }
 
-/* 深色下的浅色占位块 */
+/* 深色下浅色占位块 */
 [data-theme="dark"] .card-row .ci{background:rgba(255,255,255,.07)}
-
-* /placeholder end
+[data-theme="dark"] .card-row:active{background:rgba(255,255,255,.06)}
+[data-theme="dark"] .couple-stat{background:rgba(255,255,255,.06)}
+[data-theme="dark"] .couple-av{background:rgba(255,255,255,.09)}
+[data-theme="dark"] .card-row .ci{background:rgba(255,255,255,.07)}
